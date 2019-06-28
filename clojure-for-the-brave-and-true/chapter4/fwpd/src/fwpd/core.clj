@@ -74,3 +74,15 @@
   (if (validate validators new-suspect)
     (conj existing-suspects new-suspect)
     existing-suspects))
+
+;;
+;; Exercise 4: Write a function that will take your list of maps and convert it
+;;             back to a CSV string. You'll need to use the `clojure.string/join`
+;;             function.
+;;
+
+(defn create-csv
+  [suspects]
+  (clojure.string/join "\n" (map (fn [suspect]
+                                   (clojure.string/join "," (map #(second %) suspect)))
+                                 suspects)))
