@@ -33,3 +33,44 @@
 (defn glitter-filter
   [minimum-glitter records]
   (filter #(>= (:glitter-index %) minimum-glitter) records))
+
+;;
+;; Exercise 1: Turn the result of your glitter filter into a list of names.
+;;
+
+(defn glitter-filter-names
+  [minimum-glitter records]
+  (map #(:name %) (glitter-filter minimum-glitter records)))
+
+;;
+;; Exercise 2: Write a function, `append`, which will append a new suspect to
+;;             your list of suspects.
+;;
+
+(defn append
+  [existing-suspects new-suspect]
+  (conj existing-suspects new-suspect))
+
+;;
+;; Exercise 3: Write a function, `validate`, which will check that `:name` and
+;;             `:glitter-index` are present when you append. The `validate`
+;;             function should accept two arguments: a map of keywords to
+;;             validating functions, similar to `conversions`, and the record
+;;             to be validated.
+;;
+
+(def validators {:name #(get % :name)
+                 :glitter-index #(get % :glitter-index)})
+
+(defn validate
+  [validators suspect]
+  (reduce (fn [is-valid [key validator]]
+            (and is-valid (validator suspect)))
+          true
+          validators))
+
+(defn validated-append
+  [existing-suspects new-suspect]
+  (if (validate validators new-suspect)
+    (conj existing-suspects new-suspect)
+    existing-suspects))
